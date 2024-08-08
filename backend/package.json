@@ -10,5 +10,11 @@
     "node.js": "^0.0.1-security",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
+  },
+  "scripts": {
+    "dev": "nodemon app.js"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.4"
   }
 }
