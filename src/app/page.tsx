@@ -1,11 +1,9 @@
-import Image from "next/image";
+import RegisterLayout from "@/components/layouts/RegisterLayout";
 
 export default function Home() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div>
-        <p>TESTE</p>
-      </div>
+    <main className="bg-blue-400 h-screen flex flex-grow item-center justify-center py-[7rem]">
+         <RegisterLayout/>
     </main>
   );
 }
