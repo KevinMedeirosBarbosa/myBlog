@@ -17,6 +17,7 @@ export default function RegisterLayout() {
       <div className="w-full font-bold text-2xl pt-20">
         <div className="max-w-md m-auto pt-16">
           <h2>Criar Conta</h2>
+
           <div className="flex space-x-2 gap-2 mt-4">
             <SocialButtom Icon={FcGoogle} text="Acessar com Google" />
             <SocialButtom
@@ -25,9 +26,11 @@ export default function RegisterLayout() {
               className="text-blue-500"
             />
           </div>
+
           <p className="text-sm font-light mt-6 text-center text-gray-500/40">
             -OU-
           </p>
+
           <div className="mt-6">
             <div className="flex flex-col gap-7">
               <LoginInput placeholder="Digite seu Nome" type="text" />
@@ -40,11 +43,12 @@ export default function RegisterLayout() {
             <p className="text-white text-xl">Criar Conta</p>
           </div>
 
-         <div className="font-light text-lg mt-5 text-slate-500 flex gap-2"> 
-          <p>Já tem uma conta?</p>
-          <a href="#" className="text-blue-400">Acessar</a>
-         </div>
-
+          <div className="font-light text-lg mt-5 text-slate-500 flex gap-2">
+            <p>Já tem uma conta?</p>
+            <a href="#" className="text-blue-400">
+              Acessar
+            </a>
+          </div>
         </div>
       </div>
     </div>
