@@ -1,3 +1,4 @@
+'use client';
 import React from "react";
 import { FaMicroblog } from "react-icons/fa";
 import SocialButtom from "../SocialButtom";
@@ -5,6 +6,7 @@ import { FcGoogle } from "react-icons/fc";
 import { BsFacebook } from "react-icons/bs";
 import PasswordInput from "../inputs/PasswordInput";
 import LoginInput from "../inputs/LoginInput";
+import { signIn } from "next-auth/react";
 
 export default function RegisterLayout() {
   return (
@@ -19,7 +21,11 @@ export default function RegisterLayout() {
           <h2>Criar Conta</h2>
 
           <div className="flex space-x-2 gap-2 mt-4">
-            <SocialButtom Icon={FcGoogle} text="Acessar com Google" />
+            <div className="flex w-full"  onClick={() => {
+              signIn("google", { callbackUrl: "/" });
+            }}>
+            <SocialButtom Icon={FcGoogle} text="Acessar com Google"  />
+            </div>
             <SocialButtom
               Icon={BsFacebook}
               text="Acessar com Facebook"
