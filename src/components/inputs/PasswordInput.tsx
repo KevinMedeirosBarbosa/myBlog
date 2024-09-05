@@ -1,12 +1,16 @@
 "use client";
-import React from "react";
+import { Dispatch, SetStateAction } from "react";
 import { useState } from "react";
 import { FaEyeSlash, FaEye } from "react-icons/fa";
 import { RiLockPasswordFill } from "react-icons/ri";
 
-export default function PasswordInput() {
-  const [showPassword, setShowPassword] = useState(false);
+interface PasswordProps {
+  onChange: Dispatch<SetStateAction<string>>;
+}
 
+export default function PasswordInput({ onChange }:PasswordProps) {
+  const [showPassword, setShowPassword] = useState(false);
+  
   const toggleShowPassword = () => {
     setShowPassword(!showPassword);
   };
@@ -21,6 +25,7 @@ export default function PasswordInput() {
           className="text-xl font-light text-gray-500/40 w-full"
           placeholder="Senha"
           type={showPassword ? "text" : "password"}
+          onChange={(e) => onChange(e.target.value)}
         />
       </div>
       <div

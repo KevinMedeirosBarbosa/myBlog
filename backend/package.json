@@ -1,11 +1,14 @@
 {
   "dependencies": {
+    "bcryptjs": "^2.4.3",
     "body-parser": "^1.20.2",
     "concurrently": "^8.2.2",
+    "cors": "^2.8.5",
     "express": "^4.19.2",
     "express-handlebars": "^8.0.1",
     "i": "^0.3.7",
     "mysql": "^2.18.1",
+    "mysql2": "^3.11.0",
     "node": "^22.6.0",
     "node.js": "^0.0.1-security",
     "react": "^18.3.1",

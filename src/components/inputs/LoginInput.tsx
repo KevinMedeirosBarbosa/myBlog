@@ -1,4 +1,4 @@
-import React from "react";
+import { Dispatch, SetStateAction } from "react";
 import { MdEmail } from "react-icons/md";
 import { FaUser } from "react-icons/fa";
 
@@ -6,9 +6,15 @@ interface LoginInputProps {
   type: "email" | "text";
   placeholder: string;
   id?: string;
+  onChange: Dispatch<SetStateAction<string>>;
 }
 
-export default function LoginInput({ type, placeholder, id }: LoginInputProps) {
+export default function LoginInput({
+  type,
+  placeholder,
+  id,
+  onChange,
+}: LoginInputProps) {
   return (
     <div className="flex gap-2 border-b-2 rounded-md">
       {type == "email" && (
@@ -28,6 +34,7 @@ export default function LoginInput({ type, placeholder, id }: LoginInputProps) {
         placeholder={placeholder}
         type={type}
         id={id}
+        onChange={(e) => onChange(e.target.value)}
       />
     </div>
   );
