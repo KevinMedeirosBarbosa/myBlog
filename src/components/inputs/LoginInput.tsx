@@ -7,6 +7,7 @@ interface LoginInputProps {
   placeholder: string;
   id?: string;
   onChange: Dispatch<SetStateAction<string>>;
+  value?: string;
 }
 
 export default function LoginInput({
@@ -14,6 +15,7 @@ export default function LoginInput({
   placeholder,
   id,
   onChange,
+  value,
 }: LoginInputProps) {
   return (
     <div className="flex gap-2 border-b-2 rounded-md">
@@ -30,11 +32,12 @@ export default function LoginInput({
       )}
 
       <input
-        className="text-xl font-light text-gray-500/40  focus:ring-0 focus:ring-offset-0 w-full"
+        className="text-xl font-light text-gray-500  focus:ring-0 focus:ring-offset-0 w-full"
         placeholder={placeholder}
         type={type}
         id={id}
         onChange={(e) => onChange(e.target.value)}
+        value={value}
       />
     </div>
   );

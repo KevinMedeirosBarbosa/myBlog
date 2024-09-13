@@ -1,7 +1,7 @@
 const express = require("express");
-const router = express.Router();
-const Users = require("../../models/Clients");
-import bcrypt from "bcrypt";
+const router  = express.Router();
+const Users   = require("../../models/Clients");
+const bcrypt  = require("bcrypt");
 
 router.post("/create", async (req, res) => {
   const { name, email, password } = req.body;
@@ -14,10 +14,10 @@ router.post("/create", async (req, res) => {
     });
 
     let user = await Users.findOne({ where: { email: email } });
-    console.log(JSON.stringify(user));
 
     if (user) {
       const messageError = {
+        status: 204,
         message: "E-mail ja utilizado em uma conta existente!",
       };
       return res.status(200).json(messageError);

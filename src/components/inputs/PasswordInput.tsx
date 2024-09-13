@@ -22,7 +22,7 @@ export default function PasswordInput({ onChange }:PasswordProps) {
           <RiLockPasswordFill className="text-white" />
         </div>
         <input
-          className="text-xl font-light text-gray-500/40 w-full"
+          className="text-xl font-light text-gray-500 w-full"
           placeholder="Senha"
           type={showPassword ? "text" : "password"}
           onChange={(e) => onChange(e.target.value)}

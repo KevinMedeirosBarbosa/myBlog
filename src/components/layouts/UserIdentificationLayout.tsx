@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FaMicroblog } from "react-icons/fa";
 import SocialButtom from "../SocialButtom";
 import { FcGoogle } from "react-icons/fc";
@@ -14,8 +14,10 @@ export default function RegisterLayout() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [showLogin, setShowLogin] = useState(false);
+  const [showMessageError, setShowMessageError] = useState("");
 
-  const manualRegisterSubmission = async () => {
+  const manualRegisterSubmission = async (e: any) => {
+    e.preventDefault();
     try {
       const response = await axios.post(
         "http://localhost:3001/register/create",
@@ -29,6 +31,30 @@ export default function RegisterLayout() {
         "Requisição para o backend enviada com sucesso!",
         response.data
       );
+      const data = response.data;
+      if (data.status === 204) {
+        setShowMessageError(data.message);
+      }
+    } catch (error) {
+      console.error("Erro ao fazer requisição para o backend:", error);
+    }
+  };
+
+  const manualLoginSubmission = async (e: any) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post("http://localhost:3001/login/manual", {
+        email: email,
+        password: password,
+      });
+      console.log(
+        "Requisição para o backend enviada com sucesso!",
+        response.data
+      );
+      const data = response.data;
+      if (data.status === 204) {
+        setShowMessageError(data.message);
+      }
     } catch (error) {
       console.error("Erro ao fazer requisição para o backend:", error);
     }
@@ -38,115 +64,124 @@ export default function RegisterLayout() {
     setShowLogin(!showLogin);
   };
 
+  useEffect(() => {
+    if (showMessageError) {
+      setShowMessageError("");
+    }
+  }, [password, email, showLogin]);
+
+  useEffect(() => {
+    console.log(email, name);
+    setEmail("");
+    setName("");
+    setPassword("");
+  }, [showLogin]);
+
   return (
-    <div className="bg-white w-full max-w-7xl rounded-3xl shadow-2xl flex">
-      <div className="bg-blue-400 w-[70%] text-white text-center text-2xl pt-36 font-bold rounded-2xl">
+    <div className="bg-white w-full max-w-7xl md:rounded-3xl px-5 md:px-0 shadow-2xl flex h-full justify-center items-center">
+      <div className="bg-blue-400 text-white text-center text-2xl pt-36 font-bold rounded-2xl hidden md:block h-full w-full">
         <h1>MySpace</h1>
         <h2>Seu lugar para pensar!</h2>
         <FaMicroblog className="w-2/5 h-2/5 ml-40 mt-10" />
       </div>
-      <div className="w-full font-bold text-2xl pt-20">
-        <div className="max-w-md m-auto pt-16">
+      <div className="w-full font-bold text-2xl">
+        <div className="max-w-md m-auto">
           {showLogin ? <h2>Criar Conta</h2> : <h2>Conecte-se</h2>}
 
-          {showLogin ? (
-            <div className="flex space-x-2 gap-2 mt-4">
-              <div
-                className="flex w-full"
-                onClick={() => {
-                  signIn("google", { callbackUrl: "/" });
-                }}
-              >
-                <SocialButtom Icon={FcGoogle} text="Criar com Google" />
-              </div>
-              <div
-                className="flex w-full"
-                onClick={() => {
-                  signIn("facebook", { callbackUrl: "/" });
-                }}
-              >
-                <SocialButtom
-                  Icon={BsFacebook}
-                  text="Criar com Facebook"
-                  className="text-blue-500"
-                />
-              </div>
+          <div className="flex gap-2 mt-4 flex-col md:flex-row">
+            <div
+              className="flex w-full"
+              onClick={() => {
+                signIn("google", { callbackUrl: "/" });
+              }}
+            >
+              <SocialButtom Icon={FcGoogle} text="Acessar com Google" />
             </div>
-          ) : (
-            <div className="flex space-x-2 gap-2 mt-4">
-              <div
-                className="flex w-full"
-                onClick={() => {
-                  signIn("google", { callbackUrl: "/" });
-                }}
-              >
-                <SocialButtom Icon={FcGoogle} text="Acessar com Google" />
-              </div>
-              <div
-                className="flex w-full"
-                onClick={() => {
-                  signIn("facebook", { callbackUrl: "/" });
-                }}
-              >
-                <SocialButtom
-                  Icon={BsFacebook}
-                  text="Acessar com Facebook"
-                  className="text-blue-500"
-                />
-              </div>
+            <div
+              className="flex w-full"
+              onClick={() => {
+                signIn("facebook", { callbackUrl: "/" });
+              }}
+            >
+              <SocialButtom
+                Icon={BsFacebook}
+                text="Acessar com Facebook"
+                className="text-blue-500"
+              />
             </div>
-          )}
+          </div>
 
           <p className="text-sm font-light mt-6 text-center text-gray-500/40">
             -OU-
           </p>
 
-          {showLogin ? (
-            <div className="mt-6">
-              <div className="flex flex-col gap-7">
-                <LoginInput
-                  placeholder="Digite seu Nome"
-                  type="text"
-                  onChange={setName}
-                />
-                <LoginInput
-                  placeholder="Digite seu E-mail"
-                  type="email"
-                  onChange={setEmail}
-                />
-                <PasswordInput onChange={setPassword} />
+          <form
+            onSubmit={
+              showLogin ? manualRegisterSubmission : manualLoginSubmission
+            }
+          >
+            {showLogin ? (
+              <div className="mt-6">
+                <div className="flex flex-col gap-7">
+                  <LoginInput
+                    placeholder="Digite seu Nome"
+                    type="text"
+                    onChange={setName}
+                    id="name"
+                    value={name}
+                  />
+                  <LoginInput
+                    placeholder="Digite seu E-mail"
+                    type="email"
+                    onChange={setEmail}
+                    id="email"
+                    value={email}
+                  />
+                  <PasswordInput onChange={setPassword} />
+                </div>
               </div>
-            </div>
-          ) : (
-            <div className="mt-6">
-              <div className="flex flex-col gap-7">
-                <LoginInput
-                  placeholder="Digite seu E-mail"
-                  type="email"
-                  onChange={setEmail}
-                />
-                <PasswordInput onChange={setPassword} />
+            ) : (
+              <div className="mt-6">
+                <div className="flex flex-col gap-7">
+                  <LoginInput
+                    placeholder="Digite seu E-mail"
+                    type="email"
+                    onChange={setEmail}
+                    id="email"
+                  />
+                  <PasswordInput onChange={setPassword} />
+                </div>
               </div>
-            </div>
-          )}
+            )}
 
-          {showLogin ? (
+            <div className="h-10">
+              <p className="text-sm text-red-500">
+                {showMessageError ? showMessageError : ""}
+              </p>
+            </div>
+
             <button
-              className={` mt-8 text-center p-3 bg-blue-400 rounded-lg cursor-pointer select-none w-full ${
-                name === "" || email === "" || password === ""
+              className={`mt-4 text-center p-3 rounded-lg select-none w-full ${
+                email === "" ||
+                password === "" ||
+                (showMessageError !== "" && !showLogin && name === "") ||
+                showMessageError !== ""
                   ? "bg-blue-200 cursor-not-allowed"
-                  : ""
+                  : "bg-blue-400 cursor-pointer"
               }`}
-              onClick={manualRegisterSubmission}
-              disabled={name === "" || email === "" || password === ""}
+              type="submit"
+              disabled={
+                email === "" ||
+                password === "" ||
+                (showMessageError !== "" && !showLogin && name === "") ||
+                showMessageError !== ""
+              }
             >
-              <p className="text-white text-xl">Criar Conta</p>
+              <span className="text-white text-xl">
+                {showLogin ? "Criar Conta" : "Acessar"}
+              </span>
             </button>
-          ) : (
-            <button className="mt-8 text-center p-3 bg-blue-400 rounded-lg cursor-pointer select-none w-full">
-              <p className="text-white text-xl">Acessar</p>
-            </button>
-          )}
+          </form>
 
           {showLogin ? (
             <div className="font-light text-lg mt-5 text-slate-500 flex gap-2">

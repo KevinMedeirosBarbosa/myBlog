@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const Users = require("../../models/Clients");
 const { Sequelize } = require("sequelize");
+const bcrypt = require("bcrypt");
 
 router.post("/google", async (req, res) => {
   const { googleID, name, email } = req.body;
@@ -95,6 +96,42 @@ router.post("/facebook", async (req, res) => {
   } catch (error) {
     console.error("Erro ao fazer login com o Facebook:", error);
     res.status(500).json({ error: "Erro ao fazer login com o Facebook." });
+  }
+});
+
+router.post("/manual", async (req, res) => {
+  const { email, password } = req.body;
+
+  try {
+    console.log("Requisição para /login/manual:", {
+      email,
+      password,
+    });
+
+    const user = await Users.findOne({ where: { email: email } });
+
+    if (!user) {
+      const messageError = {
+        status: 204,
+        message: "Conta inexistente ou senha inválida.",
+      };
+      return res.status(200).json(messageError);
+    }
+
+    const verifyPassword = await bcrypt.compare(password, user.password);
+
+    if (!verifyPassword) {
+      const messageError = {
+        status: 204,
+        message: "Conta inexistente ou senha inválida.",
+      };
+      return res.status(200).json(messageError);
+    }
+
+    res.json(user);
+  } catch (error) {
+    console.error("Erro ao fazer login:", error);
+    res.status(500).json({ error: "Erro ao fazer login." });
   }
 });
 
