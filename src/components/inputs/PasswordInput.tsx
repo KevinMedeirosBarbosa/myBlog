@@ -5,12 +5,16 @@ import { FaEyeSlash, FaEye } from "react-icons/fa";
 import { RiLockPasswordFill } from "react-icons/ri";
 
 interface PasswordProps {
+  placeholder?: string;
   onChange: Dispatch<SetStateAction<string>>;
 }
 
-export default function PasswordInput({ onChange }:PasswordProps) {
+export default function PasswordInput({
+  onChange,
+  placeholder,
+}: PasswordProps) {
   const [showPassword, setShowPassword] = useState(false);
-  
+
   const toggleShowPassword = () => {
     setShowPassword(!showPassword);
   };
@@ -23,7 +27,7 @@ export default function PasswordInput({ onChange }:PasswordProps) {
         </div>
         <input
           className="text-xl font-light text-gray-500 w-full"
-          placeholder="Senha"
+          placeholder={placeholder}
           type={showPassword ? "text" : "password"}
           onChange={(e) => onChange(e.target.value)}
         />

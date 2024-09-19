@@ -11,12 +11,21 @@ import axios from "axios";
 
 export default function RegisterLayout() {
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [showLogin, setShowLogin] = useState(false);
   const [showMessageError, setShowMessageError] = useState("");
 
-  const manualRegisterSubmission = async (e: any) => {
+  const isDisabled = showLogin
+    ? email === "" || password === "" || name === "" || confirmPassword === ""
+    : email === "" || password === "";
+
+  const hasError = showMessageError !== "";
+
+  const manualRegisterSubmission = async (
+    e: React.FormEvent<HTMLFormElement>
+  ) => {
     e.preventDefault();
     try {
       const response = await axios.post(
@@ -40,7 +49,7 @@ export default function RegisterLayout() {
     }
   };
 
-  const manualLoginSubmission = async (e: any) => {
+  const manualLoginSubmission = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
       const response = await axios.post("http://localhost:3001/login/manual", {
@@ -68,14 +77,19 @@ export default function RegisterLayout() {
     if (showMessageError) {
       setShowMessageError("");
     }
-  }, [password, email, showLogin]);
+  }, [password, email, showLogin, confirmPassword]);
 
   useEffect(() => {
-    console.log(email, name);
     setEmail("");
     setName("");
     setPassword("");
   }, [showLogin]);
+
+  useEffect(() => {
+    if (confirmPassword === password || confirmPassword === "") return;
+
+    setShowMessageError("Senhas não compativeis");
+  }, [confirmPassword]);
 
   return (
     <div className="bg-white w-full max-w-7xl md:rounded-3xl px-5 md:px-0 shadow-2xl flex h-full justify-center items-center">
@@ -137,7 +151,11 @@ export default function RegisterLayout() {
                     id="email"
                     value={email}
                   />
-                  <PasswordInput onChange={setPassword} />
+                  <PasswordInput placeholder="Senha" onChange={setPassword} />
+                  <PasswordInput
+                    placeholder="Confirme sua Senha"
+                    onChange={setConfirmPassword}
+                  />
                 </div>
               </div>
             ) : (
@@ -148,8 +166,9 @@ export default function RegisterLayout() {
                     type="email"
                     onChange={setEmail}
                     id="email"
+                    value={email}
                   />
-                  <PasswordInput onChange={setPassword} />
+                  <PasswordInput placeholder="Senha" onChange={setPassword} />
                 </div>
               </div>
             )}
@@ -162,20 +181,12 @@ export default function RegisterLayout() {
 
             <button
               className={`mt-4 text-center p-3 rounded-lg select-none w-full ${
-                email === "" ||
-                password === "" ||
-                (showMessageError !== "" && !showLogin && name === "") ||
-                showMessageError !== ""
+                isDisabled || hasError
                   ? "bg-blue-200 cursor-not-allowed"
                   : "bg-blue-400 cursor-pointer"
               }`}
               type="submit"
-              disabled={
-                email === "" ||
-                password === "" ||
-                (showMessageError !== "" && !showLogin && name === "") ||
-                showMessageError !== ""
-              }
+              disabled={isDisabled || hasError}
             >
               <span className="text-white text-xl">
                 {showLogin ? "Criar Conta" : "Acessar"}
@@ -183,25 +194,14 @@ export default function RegisterLayout() {
             </button>
           </form>
 
-          {showLogin ? (
-            <div className="font-light text-lg mt-5 text-slate-500 flex gap-2">
-              <p>Já tem uma conta?</p>
-              <div className="cursor-pointer">
-                <p className="text-blue-400" onClick={toggleShowLogin}>
-                  Acessar
-                </p>
-              </div>
+          <div className="font-light text-lg mt-5 text-slate-500 flex gap-2">
+            <p>{showLogin ? "Já tem uma conta?" : "Não possui uma conta?"}</p>
+            <div className="cursor-pointer">
+              <p className="text-blue-400" onClick={toggleShowLogin}>
+                {showLogin ? "Acessar" : "Cadastrar"}
+              </p>
             </div>
-          ) : (
-            <div className="font-light text-lg mt-5 text-slate-500 flex gap-2">
-              <p>Não possui uma conta?</p>
-              <div className="cursor-pointer">
-                <p className="text-blue-400" onClick={toggleShowLogin}>
-                  Cadastrar
-                </p>
-              </div>
-            </div>
-          )}
+          </div>
         </div>
       </div>
     </div>
